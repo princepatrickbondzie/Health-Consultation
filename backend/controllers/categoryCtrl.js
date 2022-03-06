@@ -5,4 +5,6 @@ const getCategories = async (req, res) => {
   res.status(200).json({ categories });
 };
 
-module.exports = { getCategories };
+const createCategory = async (req, res) => {};
+
+module.exports = { getCategories, createCategory };
