@@ -52,7 +52,7 @@ const officerLogin = async (req, res) => {
       expiresIn: "1h",
     });
     await Officer.findByIdAndUpdate(officer._id, { accessToken });
-    res.status(200).json({ officer, accessToken: token });
+    res.status(200).json({ officer, accessToken });
   } else {
     res.status(400).json({
       status: "fail",

@@ -20,7 +20,7 @@ const consultationSchema = new Schema(
       type: String,
       required: true,
     },
-    peDiagnosis: {
+    diagnosis: {
       type: String,
       required: true,
     },

@@ -1,6 +1,6 @@
 const Consultation = require("../models/Consultation");
-// const Patient = require("../models/Patient");
-// const Officer = require("../models/Officer");
+const Patient = require("../models/Patient");
+const Officer = require("../models/Officer");
 
 const getConsultations = async (req, res) => {
   const consultation = await Consultation.find();
@@ -35,6 +35,69 @@ const getConsultation = async (req, res) => {
   }
 };
 
-const createConsultation = async (req, res) => {};
+const createConsultation = async (req, res) => {
+  // get officer
+  const officer = await Officer.findById(req.body.officer);
+  if (!officer) return res.status(400).send("Invalid officer ID");
 
-module.exports = { getConsultation, getConsultations, createConsultation };
+  // get patient
+  const patient = await Patient.findById(req.body.patient);
+  if (!patient) return res.status(400).send("Invalid patient ID");
+
+  const consultation = await Consultation.create({
+    officer: req.body.officer,
+    patient: req.body.patient,
+    history: req.body.history,
+    diagnosis: req.body.diagnosis,
+    illness: req.body.illness,
+    treatment: req.body.treatment,
+    date: req.body.date,
+  });
+  // return HTTP response
+  res.status(201).json({
+    status: "sucess",
+    data: consultation,
+  });
+};
+
+const updateConsultation = async (req, res) => {
+  // get officer from HTTP request
+  if (req.body.officer) {
+    const officer = await Officer.findById(req.body.officer);
+    if (!officer) return res.status(400).send("Invalid officer");
+  }
+  // get patient from HTTP request
+  if (req.body.patient) {
+    const patient = await Patient.findById(req.body.patient);
+    if (!patient) return res.status(400).send("Invalid patient");
+  }
+
+  // find and update
+  const consultation = await Consultation.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    { new: true }
+  );
+
+  if (!consultation) {
+    return res.status(404).json({
+      status: "fail",
+      message: "can't find the consultation record",
+    });
+  }
+
+  // return HTTP reponse
+  res.status(200).json({
+    status: "success",
+    data: {
+      consultation,
+    },
+  });
+};
+
+module.exports = {
+  getConsultation,
+  getConsultations,
+  createConsultation,
+  updateConsultation,
+};

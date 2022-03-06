@@ -5,6 +5,32 @@ const getCategories = async (req, res) => {
   res.status(200).json({ categories });
 };
 
-const createCategory = async (req, res) => {};
+const getCategory = async (req, res) => {
+  const category = await Category.findById(req.params.id);
+  res.status(200).json({ category });
+};
 
-module.exports = { getCategories, createCategory };
+const createCategory = async (req, res) => {
+  const category = await Category.create({ name: req.body.name });
+  res.status(201).json({ status: "success", data: category });
+};
+
+const updateCategory = async (req, res) => {
+  const category = await Category.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  });
+  res.status(200).json({ category });
+};
+
+const deleteCategory = async (req, res) => {
+  await Category.findByIdAndDelete(req.params.id);
+  res.status(200).json({ message: "Category deleted.." });
+};
+
+module.exports = {
+  getCategories,
+  getCategory,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+};

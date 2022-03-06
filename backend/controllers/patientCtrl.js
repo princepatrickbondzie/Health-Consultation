@@ -29,7 +29,7 @@ const createPatient = async (req, res) => {
 
   // return HTTP response
   res.status(201).json({
-    status: "sucess",
+    status: "success",
     data: patient,
   });
 };
