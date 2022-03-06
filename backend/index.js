@@ -5,16 +5,16 @@ const express = require("express");
 const app = express();
 
 // import routes
-const authRoute = require("./routes/authRoute");
+const facilityRoute = require("./routes/facilityRoute");
 const officerRoute = require("./routes/officerRoute");
-const patientRoutes = require("./routes/patientRoute");
+const patientRoute = require("./routes/patientRoute");
 
 // initialize
 app.use(cors());
 app.use(express.json());
 
 // routes
-app.use("/api", authRoute, officerRoute, patientRoutes);
+app.use("/api", facilityRoute, officerRoute, patientRoute);
 
 app.get("/", (req, res) => {
   res.status(400).sendFile(path.join(__dirname + "/pages/index.html"));

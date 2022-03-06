@@ -10,7 +10,7 @@ const FacilitySchema = new Schema(
       type: String,
       type: Schema.Types.ObjectId,
       ref: "Officer",
-      required: true,
+      default: [],
     },
     patient: {
       type: String,
@@ -23,7 +23,7 @@ const FacilitySchema = new Schema(
       type: String,
       type: Schema.Types.ObjectId,
       ref: "Category",
-      required: true,
+      // required: true,
     },
     password: { type: String, required: true, unique: true },
   },

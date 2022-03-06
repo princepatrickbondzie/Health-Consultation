@@ -4,15 +4,15 @@ const {
   getPatient,
   updatePatient,
   deletePatient,
-  registerPatient,
-  loginPatient,
+  createPatient,
+  patientLogin,
 } = require("../controllers/patientCtrl");
 
 router.get("/patients", getAllPatients);
 router.get("/patient/:id", getPatient);
 router.patch("/patient/:id", updatePatient);
 router.get("/patient/:id", deletePatient);
-router.patch("/patient/register", registerPatient);
-router.post("/patient/login", loginPatient);
+router.patch("/patient/register", createPatient);
+router.post("/patient/login", patientLogin);
 
 module.exports = router;

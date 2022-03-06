@@ -2,7 +2,7 @@ const { model, Schema } = require("mongoose");
 
 const patientSchema = new Schema(
   {
-    name: {
+    fullName: {
       type: String,
       required: true,
       unique: true,

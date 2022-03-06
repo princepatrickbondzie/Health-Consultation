@@ -7,80 +7,59 @@ const getAllPatients = async (req, res) => {
 };
 
 const getPatient = async (req, res) => {
-  const id = req.params.id;
-  const patient = await Patient.findById(id);
+  const patient = await Patient.findById(req.params.id);
   res.status(200).json({ patient });
 };
 
+const createPatient = async (req, res) => {
+  const hashedPassword = await bcrypt.hash(password, 12);
+  const patient = await Patient.create({
+    fullName: req.body.fullName,
+    email: req.body.email,
+    phone: req.body.phone,
+    gender: req.body.gender,
+    birthdate: req.body.birthdate,
+    IDcard: req.body.IDcard,
+    currentAddress: req.body.currentAddress,
+    relative: req.body.relative,
+    allergy: req.body.allergy,
+    bloodType: req.body.bloodType,
+    password: hashedPassword,
+  });
+
+  // return HTTP response
+  res.status(201).json({
+    status: "sucess",
+    data: patient,
+  });
+};
+
 const updatePatient = async (req, res) => {
-  const id = req.params.id;
-  const patient = await Patient.findByIdAndUpdate(id, req.body, {
+  const patient = await Patient.findByIdAndUpdate(req.params.id, req.body, {
     new: true,
   });
   res.status(200).json({ patient });
 };
 
 const deletePatient = async (req, res) => {
-  const id = req.params.id;
-  await Patient.findByIdAndDelete(id);
+  await Patient.findByIdAndDelete(req.params.id);
   res.status(200).json({ message: "Patient deleted successfully" });
 };
 
-const registerPatient = async (req, res) => {
-  try {
-    const {
-      name,
-      email,
-      phone,
-      password,
-      gender,
-      birthdate,
-      IDcard,
-      currentAddress,
-      relative,
-      allergy,
-      bloodType,
-    } = req.body;
-
-    const hashedPassword = await bcrypt.hash(password, 12);
-
-    const patient = await Patient.create({
-      name,
-      email,
-      phone,
-      gender,
-      birthdate,
-      IDcard,
-      currentAddress,
-      relative,
-      allergy,
-      bloodType,
-      password: hashedPassword,
-    });
-    res.status(201).json({ patient });
-  } catch (error) {
-    console.error(error);
-  }
-};
-
-const loginPatient = async (req, res, next) => {
-  try {
-    const { email, password } = req.body;
-    const patient = await Patient.findOne({ email });
-    if (!patient) next(new Error("Patient does not exist!"));
-    const isMatch = await bcrypt.compare(password, patient.password);
-    if (!isMatch) return next(new Error("Invalid Credentials"));
-    const accessToken = jwt.sign({ id: officer._id }, "123456789", {
+const patientLogin = async (req, res, next) => {
+  const patient = await Patient.findOne({ email: req.body.email });
+  if (patient && (await bcrypt.compare(req.body.password, patient.password))) {
+    const accessToken = jwt.sign({ id: patient._id }, "123456789", {
       expiresIn: "1h",
     });
-
-    await Officer.findByIdAndUpdate(patient._id, { accessToken });
-    res.status(200).json({
-      patient,
-      accessToken,
+    await Patient.findByIdAndUpdate(patient._id, { accessToken });
+    res.status(200).json({ patient, accessToken: token });
+  } else {
+    res.status(400).json({
+      status: "fail",
+      data: null,
+      message: "Incorrent Email or Password",
     });
-  } catch (error) {
-    console.error(error);
   }
 };
 
@@ -89,6 +68,6 @@ module.exports = {
   getPatient,
   updatePatient,
   deletePatient,
-  registerPatient,
-  loginPatient,
+  createPatient,
+  patientLogin,
 };
