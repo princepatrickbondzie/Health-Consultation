@@ -7,6 +7,7 @@ const createFacility = async (req, res) => {
   if (emailExist) {
     res.status(400).json({ message: "Email is not available!!" });
   }
+
   //encrypt password
   const hashedPassword = await bcrypt.hash(password, 12);
 
@@ -32,7 +33,7 @@ const facilityLogin = async (req, res, next) => {
     .populate("category")
     .populate("patient")
     .populate("consultationOfficer");
-  if (!facility) next(new Error("User does not exist!"));
+  if (!facility) next(new Error("Facility does not exist!"));
   const isMatch = await bcrypt.compare(password, facility.password);
   if (!isMatch) return next(new Error("Invalid Credentials"));
   const accessToken = jwt.sign({ id: facility._id }, "123456789", {

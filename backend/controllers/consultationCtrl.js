@@ -3,8 +3,8 @@ const Patient = require("../models/Patient");
 const Officer = require("../models/Officer");
 
 const getConsultations = async (req, res) => {
-  const consultation = await Consultation.find();
-  res.status(200).json({ consultation });
+  const consultations = await Consultation.find();
+  res.status(200).json({ consultations });
 };
 
 const getConsultation = async (req, res) => {
@@ -15,7 +15,7 @@ const getConsultation = async (req, res) => {
   if (!consultation) {
     return res.status(404).json({
       status: "fail",
-      message: "can't find the consultation record",
+      message: "can't find consultation record",
     });
   }
 
@@ -26,12 +26,12 @@ const getConsultation = async (req, res) => {
   ) {
     // if user type is correct return HTTP response
     res.status(200).json({
-      status: "sucess",
+      status: "success",
       DateTime: req.requestTime,
       data: consultation,
     });
   } else {
-    res.status(400).json({ message: "You don't have autherize" });
+    res.status(400).json({ message: "You don't have permission" });
   }
 };
 
@@ -55,7 +55,7 @@ const createConsultation = async (req, res) => {
   });
   // return HTTP response
   res.status(201).json({
-    status: "sucess",
+    status: "success",
     data: consultation,
   });
 };
@@ -82,7 +82,7 @@ const updateConsultation = async (req, res) => {
   if (!consultation) {
     return res.status(404).json({
       status: "fail",
-      message: "can't find the consultation record",
+      message: "can't find consultation record",
     });
   }
 
